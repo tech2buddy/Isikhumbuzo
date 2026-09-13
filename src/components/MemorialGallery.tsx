@@ -2,6 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { FadeUp, ImageReveal } from "./RevealText";
 
@@ -79,6 +80,11 @@ export default function MemorialGallery() {
             </div>
           </motion.a>
         ))}
+      </div>
+      <div className="mt-10 text-center">
+        <Link href="/catalog" className="inline-flex min-h-12 items-center justify-center gap-3 border border-gold px-7 py-3 text-[12px] font-medium uppercase tracking-wide-gold text-gold transition-colors hover:bg-gold hover:text-black-main focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold">
+          View catalog <ArrowUpRight size={17} aria-hidden="true" />
+        </Link>
       </div>
     </div>
   );
