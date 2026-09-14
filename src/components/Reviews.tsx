@@ -94,7 +94,7 @@ export default function Reviews() {
 
         <form onSubmit={submitReview} className={styles.reviewForm} encType="multipart/form-data">
           <p className={styles.eyebrow}>SHARE YOUR EXPERIENCE</p>
-          <div className={styles.formGrid}><input name="name" required maxLength={80} placeholder="Your name" aria-label="Your name" /><textarea name="text" required maxLength={1200} rows={3} placeholder="Tell us about your experience" aria-label="Your review" /><button type="submit" disabled={sending} className={styles.cta}>{sending ? "Sending…" : "Submit review"} <ArrowUpRight size={18} /></button></div>
+          <div className={styles.formGrid}><input name="name" required minLength={2} maxLength={80} placeholder="Your name" aria-label="Your name" /><textarea name="text" required minLength={3} maxLength={1200} rows={3} placeholder="Tell us about your experience (at least 3 characters)" aria-label="Your review" /><button type="submit" disabled={sending} className={styles.cta}>{sending ? "Sending…" : "Submit review"} <ArrowUpRight size={18} /></button></div>
           <p role="status" className={styles.note}>{formStatus}</p>
         </form>
         <div className={styles.reviewActions}>

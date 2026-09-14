@@ -21,7 +21,12 @@ export async function POST(request: Request) {
   let form: FormData;
   try { form = await request.formData(); } catch { return reply({ error: "Invalid review form." }, 400); }
   const name = String(form.get("name") ?? "").trim(); const text = String(form.get("text") ?? "").trim();
-  if (name.length < 2 || name.length > 80 || text.length < 10 || text.length > 1200) return reply({ error: "Please provide a name and review." }, 400);
+  if (name.length < 2 || name.length > 80 || text.length < 3 || text.length > 1200) return reply({ error: "Please enter your name and a review of at least 3 characters." }, 400);
   const insert = await fetch(`${url}/rest/v1/reviews`, { method: "POST", headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ name, review_text: text }) });
-  return insert.ok ? reply({ ok: true }, 201) : reply({ error: "Review could not be saved." }, 502);
+  if (!insert.ok) {
+    const details = await insert.text().catch(() => "");
+    console.error("Review insert failed", insert.status, details.slice(0, 300));
+    return reply({ error: "Review could not be saved. Please try again." }, 502);
+  }
+  return reply({ ok: true }, 201);
 }
