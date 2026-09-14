@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Catalog from "./Catalog";
 import styles from "./catalog.module.css";
 
-export const metadata: Metadata = {
-  title: "Tombstone Catalog | Isikhumbulo Memorial",
-  description: "Explore memorial designs by reference code and enquire about a personal tribute for your loved one.",
-};
+export const metadata = pageMetadata(
+  "Tombstone Catalog | Isikhumbulo Memorial",
+  "Explore memorial designs by reference code and enquire about a personal tribute for your loved one.",
+  "/catalog",
+);
 
 export default function CatalogPage() {
   return (

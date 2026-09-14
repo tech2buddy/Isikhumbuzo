@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ArrowRight } from "lucide-react";
 import LegalPage from "@/components/LegalPage";
 
-export const metadata: Metadata = {
-  title: "Site Map | Isikhumbulo Memorial",
-  description: "A full overview of every section and page on the Isikhumbulo Memorial website.",
-};
+export const metadata = pageMetadata(
+  "Site Map | Isikhumbulo Memorial",
+  "A full overview of every section and page on the Isikhumbulo Memorial website.",
+  "/site-map",
+);
 
 const GROUPS = [
   {
@@ -14,6 +15,7 @@ const GROUPS = [
       { label: "Home", href: "/#home" },
       { label: "About Us", href: "/#about" },
       { label: "Memorial Gallery", href: "/#gallery" },
+      { label: "Tombstone Catalog", href: "/catalog" },
       { label: "Craftsmanship", href: "/#craftsmanship" },
       { label: "Tributes", href: "/#tribute" },
       { label: "Book a Consultation", href: "/#contact" },

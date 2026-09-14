@@ -7,8 +7,40 @@
 }
 .dialog {
   overscroll-behavior: contain;
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
 }
+.stoneSlider {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  min-width: 0;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding: 3px 2px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #9a742e transparent;
+}
+.stoneSlide {
+  flex: 0 0 min(78%, 240px);
+  min-width: 0;
+  scroll-snap-align: start;
+  border: 1px solid #c89b3c55;
+  background: white;
+}
+.pictureDialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(94vw, 940px);
+  max-height: 94dvh;
+  overflow-y: auto;
+  background: #15130f;
+  color: #f7f4ed;
+  border: 1px solid #c89b3c;
+  overscroll-behavior: contain;
+}
+.pictureDialog::backdrop { background: rgb(0 0 0 / 90%); }
+.fullPicture { position: relative; height: min(65dvh, 680px); }
 @media (max-width: 639px) {
   .hero {
     padding: 100px 20px 32px;

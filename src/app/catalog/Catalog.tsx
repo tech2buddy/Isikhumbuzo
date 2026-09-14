@@ -4,51 +4,10 @@ import Image from "next/image";
 import styles from "./catalog.module.css";
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, Mail, X } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Mail, X } from "lucide-react";
 
-// Every new design must be assigned a reviewed category; images alone do not
-// determine suitability. Filters are generated from these category values.
-type CatalogCategory = "Modern" | "Classic" | "Heartfelt" | "Natural" | "Children’s Memorials";
-type Design = {
-  code: string;
-  style: CatalogCategory;
-  image: string;
-  description: string;
-  fullImage?: boolean;
-};
-
-const DESIGNS: Design[] = [
-  { code: "CGE33", style: "Modern", image: "/images/cge33.png", description: "A sculpted memorial with sweeping curves and a polished dark finish." },
-  { code: "GCE34", style: "Modern", image: "/images/gce34.png", description: "An upright memorial with a curved corner detail and a contrasting stone base." },
-  { code: "GCG42", style: "Modern", image: "/images/gcg42.png", description: "A distinctive two-tone memorial with sculptural cut-outs and a rose-toned base.", fullImage: true },
-  { code: "GCG45", style: "Classic", image: "/images/gcg45.png", description: "A traditional upright memorial with a framed inscription and a blue-toned stone base.", fullImage: true },
-  { code: "GCG21", style: "Modern", image: "/images/gcg21.png", description: "A flowing upright memorial with contrasting light accents and a curved silhouette.", fullImage: true },
-  { code: "GCG25", style: "Modern", image: "/images/gcg25.png", description: "A sculptural upright memorial with angular panels and a bold circular cut-out.", fullImage: true },
-  { code: "GCG28", style: "Classic", image: "/images/gcg28.png", description: "An open-book memorial with a gold-toned centre detail and a light stone base.", fullImage: true },
-  { code: "GCG29", style: "Classic", image: "/images/gcg29.png", description: "A traditional open-book headstone with a framed surround and space for a personal tribute.", fullImage: true },
-  { code: "GCD9", style: "Modern", image: "/images/gcd9.png", description: "A broad memorial with twin stone panels, a contrasting centre strip and an angular crown.", fullImage: true },
-  { code: "GCD7", style: "Classic", image: "/images/gcd7.png", description: "Twin upright headstones joined by a central cross on a shared polished base.", fullImage: true },
-  { code: "GCD8", style: "Classic", image: "/images/gcd8.png", description: "A light-toned memorial with a sheltered inscription panel and substantial stone pillars.", fullImage: true },
-  { code: "GCD6", style: "Classic", image: "/images/gcd6.png", description: "A wide dark memorial with a contrasting central cross and a stepped floral base.", fullImage: true },
-  { code: "GCB1", style: "Children’s Memorials", image: "/images/gcb1.png", description: "A gentle tribute with a pink character feature and a tall inscription panel.", fullImage: true },
-  { code: "GCB3", style: "Children’s Memorials", image: "/images/gcb3.png", description: "A framed tribute with red-toned accents and a personal inscription panel.", fullImage: true },
-  { code: "GCB4", style: "Children’s Memorials", image: "/images/gcb4.png", description: "An angel-shaped tribute with contrasting outlines and a separate name pillar.", fullImage: true },
-  { code: "GCP22", style: "Modern", image: "/images/gcp22.png", description: "A two-tone memorial with an hourglass-inspired feature and a layered dark base.", fullImage: true },
-  { code: "GCP23", style: "Classic", image: "/images/gcp23.png", description: "An arched memorial with contrasting pillars, a leaf-shaped detail and twin flower holders.", fullImage: true },
-  { code: "GCP24", style: "Modern", image: "/images/gcp24.png", description: "An asymmetric memorial with a tall cylindrical pillar and sweeping, layered stone details.", fullImage: true },
-  { code: "GCP25", style: "Modern", image: "/images/gcp25.png", description: "A warm-toned upright memorial set above a sculpted base of contrasting curved layers.", fullImage: true },
-  { code: "GCE45", style: "Modern", image: "/images/gce45.png", description: "Twin sweeping upright forms with dove details above a light-toned stone base.", fullImage: true },
-  { code: "GCE47", style: "Modern", image: "/images/gce47.png", description: "A layered upright memorial with a botanical accent and a rounded stone base.", fullImage: true },
-  { code: "GCE48", style: "Classic", image: "/images/gce48.png", description: "A traditional peaked memorial with a contrasting vertical accent and blue-toned base.", fullImage: true },
-  { code: "GCE49", style: "Classic", image: "/images/gce49.png", description: "A framed memorial with a peaked crown, slender pillars and cross details.", fullImage: true },
-  { code: "GCB5", style: "Children’s Memorials", image: "/images/gcb5.png", description: "A gentle tribute with three rising panels, angel details and a central flower holder.", fullImage: true },
-  { code: "GCB6", style: "Children’s Memorials", image: "/images/gcb6.png", description: "An arched tribute with a sheltered angel figure and a personal inscription panel.", fullImage: true },
-  { code: "GCB7", style: "Classic", image: "/images/gcb7.png", description: "A green-toned upright memorial with an open-book motif and a separate name pillar.", fullImage: true },
-  { code: "ISM-001", style: "Heartfelt", image: "/images/heartfelt-memorial-2.png", description: "An expressive tribute inspired by love and remembrance." },
-  { code: "ISM-002", style: "Modern", image: "/images/modern-designs.png", description: "Clean lines and a contemporary approach to remembrance." },
-  { code: "ISM-003", style: "Classic", image: "/images/classic-tributes.png", description: "Traditional forms with an enduring, dignified presence." },
-  { code: "ISM-004", style: "Natural", image: "/images/natural-stone.png", description: "Organic textures for a quiet connection to nature." },
-];
+import { DESIGNS, type Design } from "@/lib/catalog";
+import { sendEnquiry } from "@/lib/enquiry-client";
 const FILTERS = ["All designs", ...new Set(DESIGNS.map((design) => design.style))];
 const INPUT = "w-full rounded-none border border-black-warm/25 bg-white px-3 py-3 text-sm text-black-warm outline-none focus:border-gold-muted focus:ring-1 focus:ring-gold-muted";
 const EMAIL = "isikhumbulomemorial@gmail.com";
@@ -56,13 +15,39 @@ const EMAIL = "isikhumbulomemorial@gmail.com";
 export default function Catalog() {
   const [filter, setFilter] = useState("All designs");
   const [selected, setSelected] = useState<Design>(DESIGNS[0]);
-  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "already" | "error">("idle");
+  const [extras, setExtras] = useState<string[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [preview, setPreview] = useState<Design | null>(null);
+  const pictureDialog = useRef<HTMLDialogElement>(null);
+  const slider = useRef<HTMLDivElement>(null);
+
+  function viewPicture(design: Design) {
+    setPreview(design);
+    pictureDialog.current?.showModal();
+  }
+
+  function addStone(code: string) {
+    if (sending.current || finished || code === selected.code) return;
+    setExtras(items => items.includes(code) ? items : [...items, code]);
+  }
+
+  function slide(direction: number) {
+    const track = slider.current;
+    if (track) track.scrollBy({ left: direction * track.clientWidth * 0.85, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+  const sending = useRef(false);
+  const finished = submitState === "sent" || submitState === "already";
+  const chosen = [selected, ...DESIGNS.filter(design => extras.includes(design.code))];
   const dialog = useRef<HTMLDialogElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const visible = DESIGNS.filter((design) => filter === "All designs" || design.style === filter);
 
   function enquire(design: Design) {
+    if (sending.current) return;
     setSelected(design);
+    setExtras([]);
+    setAdding(false);
     setSubmitState("idle");
     form.current?.reset();
     dialog.current?.showModal();
@@ -70,16 +55,18 @@ export default function Catalog() {
 
   async function prepareEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (sending.current) return;
+    if (finished) { setSubmitState("already"); return; }
     const data = new FormData(event.currentTarget);
+    sending.current = true;
     setSubmitState("sending");
     try {
-      const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
-        code: selected.code, style: selected.style, image: selected.image, name: data.get("name"), email: data.get("email"), phone: data.get("phone"), location: data.get("location"), message: data.get("message"),
-      }) });
-      setSubmitState(response.ok ? "sent" : "error");
+      setSubmitState(await sendEnquiry({
+        codes: chosen.map(design => design.code), name: String(data.get("name") ?? ""), email: String(data.get("email") ?? ""), phone: String(data.get("phone") ?? ""), location: String(data.get("location") ?? ""), message: String(data.get("message") ?? ""),
+      }));
     } catch { setSubmitState("error"); }
+    finally { sending.current = false; }
   }
-
   return (
     <section className={`${styles.collection} border-t border-gold/25 bg-black-secondary px-6 py-12 sm:px-10`}>
       <div className="mx-auto max-w-7xl">
@@ -113,22 +100,72 @@ export default function Catalog() {
         </div>
       </div>
 
-      <dialog ref={dialog} aria-labelledby="enquiry-title" className={`${styles.dialog} fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto border border-gold/50 bg-ivory p-6 text-black-warm shadow-2xl backdrop:bg-black/75 sm:p-9`}>
-        <button type="button" onClick={() => dialog.current?.close()} aria-label="Close enquiry form" className={`${styles.dialogClose} absolute right-3 top-3 flex h-11 w-11 items-center justify-center hover:bg-black/5 focus-visible:outline-2`}><X size={20} /></button>
+      <dialog ref={dialog} onCancel={event => { if (sending.current) event.preventDefault(); }} aria-labelledby="enquiry-title" className={`${styles.dialog} fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto border border-gold/50 bg-ivory p-6 text-black-warm shadow-2xl backdrop:bg-black/75 sm:p-9`}>
+        <button type="button" disabled={submitState === "sending"} onClick={() => dialog.current?.close()} aria-label="Close enquiry form" className={`${styles.dialogClose} absolute right-3 top-3 flex h-11 w-11 items-center justify-center hover:bg-black/5 focus-visible:outline-2`}><X size={20} /></button>
         <p className="pr-10 text-xs uppercase tracking-wide-gold text-gold-muted">A personal enquiry</p>
-        <h2 id="enquiry-title" className="mt-3 pr-6 font-display text-4xl">Let’s talk about {selected.code}</h2>
-        <p className="mt-3 text-sm leading-6 text-black-warm/75">{selected.style} collection. Share your details and we’ll help you explore the possibilities.</p>
-        <form ref={form} onSubmit={prepareEmail} onChange={() => setSubmitState("idle")} className="mt-6 grid gap-4 sm:grid-cols-2">
+        <h2 id="enquiry-title" className="mt-3 pr-6 font-display text-4xl">Let’s talk about {chosen.length > 1 ? "your selected stones" : selected.code}</h2>
+        <p className="mt-3 text-sm leading-6 text-black-warm/75">Share your details once. We’ll receive all your selected stones together in one enquiry.</p>
+        <form ref={form} onSubmit={prepareEmail} onChange={() => { if (!sending.current && !finished) setSubmitState("idle"); }} className="mt-6 grid gap-4 sm:grid-cols-2">
+          <fieldset disabled={submitState === "sending" || finished} className="contents">
+          <div className="grid min-w-0 gap-3 sm:col-span-2">
+            <p className="text-xs font-medium">Your selection · {chosen.length} {chosen.length === 1 ? "stone" : "stones"}</p>
+            {chosen.map(design => <div key={design.code} className="flex items-center gap-3 border border-gold/30 bg-white p-3">
+              <button type="button" onClick={() => viewPicture(design)} aria-label={`View full picture of ${design.code}`} className="shrink-0 cursor-zoom-in focus-visible:outline-2 focus-visible:outline-gold-muted"><Image src={design.image} alt={design.code} width={64} height={56} className="h-14 w-16 object-contain" /></button>
+              <div className="min-w-0 flex-1"><p className="text-sm font-medium">{design.code}</p><p className="text-xs text-black-warm/60">{design.style}</p></div>
+              {design.code !== selected.code && <button type="button" aria-label={`Remove ${design.code}`} onClick={() => setExtras(items => items.filter(code => code !== design.code))} className="min-h-11 px-2 text-xs underline">Remove</button>}
+            </div>)}
+            {!adding && chosen.length < DESIGNS.length && <button type="button" onClick={() => setAdding(true)} className="min-h-11 border border-gold-muted px-3 py-2 text-sm">+ Add another stone (optional)</button>}
+            {adding && <div className="min-w-0 border border-gold/30 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium">Choose another stone</p>
+                <div className="flex gap-1">
+                  <button type="button" onClick={() => slide(-1)} aria-label="Previous stones" className="flex h-11 w-11 items-center justify-center border border-gold/40"><ChevronLeft size={18} /></button>
+                  <button type="button" onClick={() => slide(1)} aria-label="Next stones" className="flex h-11 w-11 items-center justify-center border border-gold/40"><ChevronRight size={18} /></button>
+                </div>
+              </div>
+              <p className="my-2 text-xs leading-5 text-black-warm/65">Swipe or use the arrows. Tap a picture to see the full stone.</p>
+              <div ref={slider} className={styles.stoneSlider} role="region" aria-label="Browse stones to add" tabIndex={0}>
+                {DESIGNS.map(design => {
+                  const included = chosen.some(item => item.code === design.code);
+                  return <div key={design.code} className={styles.stoneSlide}>
+                    <button type="button" onClick={() => viewPicture(design)} aria-label={`Preview ${design.code}`} className="relative block aspect-[4/3] w-full cursor-zoom-in bg-white focus-visible:outline-2 focus-visible:outline-gold-muted">
+                      <Image src={design.image} alt={`${design.code} — ${design.style}`} fill sizes="240px" className="object-contain" />
+                      <span className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 text-[10px] text-white">View full picture</span>
+                    </button>
+                    <div className="p-3"><p className="text-sm font-medium">{design.code}</p><p className="mt-1 text-xs text-black-warm/65">{design.style}</p>
+                      <button type="button" disabled={included} onClick={() => addStone(design.code)} aria-label={included ? `${design.code} added` : `Add ${design.code}`} className="mt-3 min-h-11 w-full bg-black-warm px-2 text-xs text-ivory disabled:bg-black-warm/10 disabled:text-black-warm">{included ? "✓ Added" : "+ Add to enquiry"}</button>
+                    </div>
+                  </div>;
+                })}
+              </div>
+              <button type="button" onClick={() => setAdding(false)} className="mt-3 min-h-11 w-full border border-gold-muted text-sm">Done choosing · {chosen.length} selected</button>
+            </div>}
+          </div>
           <label className="grid gap-2 text-xs sm:col-span-2">Your name *<input autoComplete="name" name="name" required maxLength={100} pattern=".*\S.*" className={INPUT} /></label>
           <label className="grid gap-2 text-xs">Email address *<input type="email" autoComplete="email" name="email" required maxLength={160} className={INPUT} /></label>
-          <label className="grid gap-2 text-xs">Phone number *<input type="tel" autoComplete="tel" name="phone" required minLength={7} maxLength={30} pattern="[+0-9() .\-]{7,30}" className={INPUT} /></label>
+          <label className="grid gap-2 text-xs">Phone number *<input type="tel" autoComplete="tel" name="phone" required minLength={7} maxLength={30} pattern="[+0-9\(\) .\-]{7,30}" className={INPUT} /></label>
           <label className="grid gap-2 text-xs sm:col-span-2">Town / installation location (optional)<input name="location" autoComplete="address-level2" maxLength={150} className={INPUT} /></label>
           <label className="grid gap-2 text-xs sm:col-span-2">What would you like us to know? (optional)<textarea name="message" rows={3} maxLength={1000} placeholder="Personalisation, timing, or any questions…" className={INPUT} /></label>
-          <p className="text-xs leading-6 text-black-warm/70 sm:col-span-2">Your details will be included in an email to our team. You can review it before sending. Read our <Link href="/privacy-policy" className="underline underline-offset-2">privacy policy</Link>.</p>
-          <button type="submit" disabled={submitState === "sending"} className="flex min-h-12 items-center justify-center gap-3 bg-black-warm px-5 py-3 text-xs uppercase tracking-wide-gold text-ivory disabled:opacity-60 sm:col-span-2"><Mail size={17} aria-hidden="true" />{submitState === "sending" ? "Sending…" : "Send enquiry"}</button>
-          {submitState === "sent" && <p role="status" className="border border-gold-muted/40 bg-white p-4 text-sm leading-6 sm:col-span-2">Thank you. Your enquiry has been sent to our team.</p>}
+          </fieldset>
+          <p className="text-xs leading-6 text-black-warm/70 sm:col-span-2">Sending shares your details and all selected stones with our team in one email. Read our <Link href="/privacy-policy" className="underline underline-offset-2">privacy policy</Link>.</p>
+          <button type="submit" disabled={submitState === "sending"} className="flex min-h-12 items-center justify-center gap-3 bg-black-warm px-5 py-3 text-xs uppercase tracking-wide-gold text-ivory disabled:opacity-60 sm:col-span-2"><Mail size={17} aria-hidden="true" />{submitState === "sending" ? "Sending…" : finished ? "Already sent" : `Send enquiry · ${chosen.length} ${chosen.length === 1 ? "stone" : "stones"}`}</button>
+          {finished && <p role="status" className="border border-gold-muted/40 bg-white p-4 text-sm leading-6 sm:col-span-2">Already sent. Thank you — all selected stones are included in your enquiry. No need to send again.</p>}
+          {finished && <button type="button" onClick={() => enquire(selected)} className="min-h-11 text-sm underline sm:col-span-2">Start a different enquiry</button>}
           {submitState === "error" && <p role="alert" className="border border-red-800/30 bg-white p-4 text-sm leading-6 sm:col-span-2">We couldn’t send this enquiry. Please email {EMAIL} directly.</p>}
         </form>
+      </dialog>
+      <dialog ref={pictureDialog} aria-labelledby="stone-picture-title" className={styles.pictureDialog}>
+        {preview && <>
+          <div className="flex items-center justify-between gap-4 px-4 py-2">
+            <h2 id="stone-picture-title" className="font-display text-2xl">{preview.code} <span className="font-body text-xs text-grey">{preview.style}</span></h2>
+            <button type="button" onClick={() => pictureDialog.current?.close()} aria-label="Close full picture" className="flex h-11 w-11 shrink-0 items-center justify-center"><X size={22} /></button>
+          </div>
+          <div className={styles.fullPicture}><Image src={preview.image} alt={`${preview.code} — ${preview.description}`} fill sizes="(max-width: 900px) 94vw, 900px" className="object-contain" /></div>
+          <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+            <a href={preview.image} target="_blank" rel="noreferrer" className="flex min-h-11 items-center text-xs text-gold-light underline">Open original image</a>
+            <button type="button" disabled={chosen.some(item => item.code === preview.code) || finished || submitState === "sending"} onClick={() => addStone(preview.code)} className="min-h-11 bg-gold px-5 py-3 text-sm text-black-main disabled:opacity-60">{chosen.some(item => item.code === preview.code) ? "✓ Added to enquiry" : "+ Add to enquiry"}</button>
+          </div>
+        </>}
       </dialog>
     </section>
   );

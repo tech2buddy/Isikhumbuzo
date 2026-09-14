@@ -22,9 +22,24 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://isikhumbulo.co.za"),
   title: "Isikhumbulo Memorial | Honouring Every Life, Preserving Every Memory",
   description:
     "Isikhumbulo Memorial creates timeless, handcrafted tombstones and memorials. Explore our craftsmanship, memorial gallery and book a private consultation.",
+  openGraph: {
+    type: "website",
+    url: "https://isikhumbulo.co.za",
+    siteName: "Isikhumbulo Memorial",
+    title: "Isikhumbulo Memorial | Honouring Every Life, Preserving Every Memory",
+    description: "Handcrafted tombstones and memorials created with care in South Africa.",
+    images: [{ url: "/images/heartfelt-memorial-2.png", width: 1024, height: 768, alt: "Isikhumbulo Memorial tombstone" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Isikhumbulo Memorial",
+    description: "Handcrafted tombstones and memorials created with care in South Africa.",
+    images: ["/images/heartfelt-memorial-2.png"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

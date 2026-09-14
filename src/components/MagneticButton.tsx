@@ -10,6 +10,7 @@ type Props = {
   variant?: "primary" | "secondary" | "dark";
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 };
 
 export default function MagneticButton({
@@ -18,6 +19,7 @@ export default function MagneticButton({
   variant = "primary",
   className = "",
   onClick,
+  type = "button",
 }: Props) {
   const ref = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -76,7 +78,7 @@ export default function MagneticButton({
   }
 
   return (
-    <button ref={ref as React.RefObject<HTMLButtonElement>} type="button" {...commonProps}>
+    <button ref={ref as React.RefObject<HTMLButtonElement>} type={type} {...commonProps}>
       {content}
     </button>
   );

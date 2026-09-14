@@ -1,6 +1,8 @@
 # Adding catalog designs
 
-The catalog is maintained in `Catalog.tsx`; there is no image-upload or image-classification service. Copying an image into a folder alone does not publish it.
+The catalog is maintained in `src/lib/catalog.ts`, shared by the catalog UI and the enquiry server; there is no image-upload or image-classification service. Copying an image into a folder alone does not publish it.
+
+Visitors can optionally add more stones to a single enquiry. The server looks up their codes and sends one email with every selected image. Identical email payloads use a deterministic Resend idempotency key (24-hour provider window). Browser receipts store only a digest and expiry for 24 hours. This prevents accidental repeats, not deliberate spam; it is not a rate limiter or a permanent enquiry database. Run `node scripts/test-enquiries.cjs` for mocked delivery tests without using the email allowance.
 
 For each new image:
 

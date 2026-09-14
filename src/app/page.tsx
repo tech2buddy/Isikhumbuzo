@@ -8,6 +8,14 @@ import Consultation from "@/components/Consultation";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import IntroTransition from "@/components/IntroTransition";
+import Reviews from "@/components/Reviews";
+import { businessStructuredData, pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata(
+  "Isikhumbulo Memorial | Tombstones in Benoni",
+  "Isikhumbulo Memorial in Crystal Park, Benoni creates tombstones and lasting tributes. Browse our memorial catalog and contact us for a personal consultation.",
+  "/",
+);
 
 function SeamMark() {
   return (
@@ -66,6 +74,7 @@ export default function Home() {
   return (
     <>
       <IntroTransition />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessStructuredData).replace(/</g, "\\u003c") }} />
       <CustomCursor />
       <Navbar />
       <main className="flex-1">
@@ -89,6 +98,7 @@ export default function Home() {
         </section>
         <Craftsmanship />
         <Tribute />
+        <Reviews />
         <Consultation />
       </main>
       <Footer />

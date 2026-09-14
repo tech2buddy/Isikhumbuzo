@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import LegalPage from "@/components/LegalPage";
 
-export const metadata: Metadata = {
-  title: "Terms of Service | Isikhumbulo Memorial",
-  description: "The terms that govern your use of the Isikhumbulo Memorial website.",
-};
+export const metadata = pageMetadata(
+  "Terms of Service | Isikhumbulo Memorial",
+  "The terms that govern your use of the Isikhumbulo Memorial website.",
+  "/terms-of-service",
+);
 
 function Section({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (

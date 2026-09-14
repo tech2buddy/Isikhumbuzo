@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import LegalPage from "@/components/LegalPage";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Isikhumbulo Memorial",
-  description: "How Isikhumbulo Memorial collects, uses and protects your information.",
-};
+export const metadata = pageMetadata(
+  "Privacy Policy | Isikhumbulo Memorial",
+  "How Isikhumbulo Memorial collects, uses and protects your information.",
+  "/privacy-policy",
+);
 
 function Section({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
