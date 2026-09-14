@@ -38,7 +38,7 @@
 .reviewActions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .reviewForm { margin: 34px 0 20px; border: 1px solid #c89b3c45; padding: 24px; background: #181813; }
 .formGrid { display: grid; grid-template-columns: 1fr 1.5fr auto; gap: 12px; margin-top: 14px; }
-.formGrid input, .formGrid textarea { min-width: 0; border: 1px solid #c89b3c55; background: #f7f4ed; color: #15130f; padding: 12px; font: inherit; font-size: 13px; }
+.formGrid input, .formGrid textarea { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid #c89b3c55; background: #f7f4ed; color: #15130f; padding: 12px; font: inherit; font-size: 13px; }
 .formGrid textarea { resize: vertical; }
 .upload { display: flex; flex-direction: column; justify-content: center; gap: 7px; color: #c8c4ba; font-size: 11px; }
 .upload input { color: #c8c4ba; padding: 6px; background: transparent; }
@@ -62,6 +62,12 @@
   .artLabel { bottom: 10px; }
   .copy { padding: 24px 24px 32px; }
   .formGrid { grid-template-columns: 1fr; }
+  .reviewForm { padding: 18px; }
+  .formGrid { gap: 10px; }
+  .formGrid .cta, .reviewActions .cta { width: 100%; max-width: none; justify-content: center; margin-top: 4px; }
+  .reviewActions { display: grid; grid-template-columns: 1fr; }
+  .heading h2 { font-size: clamp(34px, 11vw, 48px); overflow-wrap: anywhere; }
+  .copy h3 { font-size: clamp(34px, 11vw, 48px); }
   .bottom { align-items: center; font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
