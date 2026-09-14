@@ -148,7 +148,7 @@ export default function Hero() {
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
-                className="block text-[clamp(52px,6vw,110px)] tracking-[0.01em]"
+                className="block text-[clamp(32px,11vw,52px)] tracking-[0.01em] sm:text-[clamp(52px,6vw,110px)]"
               >
                 ISIKHUMBULO
               </motion.span>
@@ -158,7 +158,7 @@ export default function Hero() {
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 1.2, ease: EASE, delay: 0.5 }}
-                className="block text-[clamp(52px,6vw,110px)] tracking-[0.01em]"
+                className="block text-[clamp(32px,11vw,52px)] tracking-[0.01em] sm:text-[clamp(52px,6vw,110px)]"
               >
                 MEMORIAL
               </motion.span>
