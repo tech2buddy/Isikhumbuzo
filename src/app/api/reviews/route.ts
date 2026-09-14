@@ -20,10 +20,8 @@ export async function POST(request: Request) {
   if (!url || !serviceKey) return reply({ error: "Reviews are not configured yet." }, 503);
   let form: FormData;
   try { form = await request.formData(); } catch { return reply({ error: "Invalid review form." }, 400); }
-  const name = String(form.get("name") ?? "").trim(); const text = String(form.get("text") ?? "").trim(); const photo = form.get("photo");
+  const name = String(form.get("name") ?? "").trim(); const text = String(form.get("text") ?? "").trim();
   if (name.length < 2 || name.length > 80 || text.length < 10 || text.length > 1200) return reply({ error: "Please provide a name and review." }, 400);
-  let photoPath = "";
-  if (photo instanceof File && photo.size) { if (photo.size > 5_000_000 || !["image/jpeg", "image/png", "image/webp"].includes(photo.type)) return reply({ error: "Photo must be JPG, PNG or WebP under 5MB." }, 400); photoPath = `pending/${crypto.randomUUID()}-${photo.name.replace(/[^a-zA-Z0-9._-]/g, "")}`; const upload = await fetch(`${url}/storage/v1/object/review-photos/${photoPath}`, { method: "POST", headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": photo.type, "x-upsert": "false" }, body: await photo.arrayBuffer() }); if (!upload.ok) return reply({ error: "Photo upload failed." }, 502); }
-  const insert = await fetch(`${url}/rest/v1/reviews`, { method: "POST", headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ name, review_text: text, photo_path: photoPath || null }) });
+  const insert = await fetch(`${url}/rest/v1/reviews`, { method: "POST", headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ name, review_text: text }) });
   return insert.ok ? reply({ ok: true }, 201) : reply({ error: "Review could not be saved." }, 502);
 }

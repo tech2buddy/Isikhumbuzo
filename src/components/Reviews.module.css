@@ -40,8 +40,6 @@
 .formGrid { display: grid; grid-template-columns: 1fr 1.5fr auto; gap: 12px; margin-top: 14px; }
 .formGrid input, .formGrid textarea { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid #c89b3c55; background: #f7f4ed; color: #15130f; padding: 12px; font: inherit; font-size: 13px; }
 .formGrid textarea { resize: vertical; }
-.upload { display: flex; flex-direction: column; justify-content: center; gap: 7px; color: #c8c4ba; font-size: 11px; }
-.upload input { color: #c8c4ba; padding: 6px; background: transparent; }
 .reviewActions > .note { flex-basis: 100%; overflow-wrap: anywhere; }
 .sampleNotice { color: #dec28c; border-left: 2px solid #c89b3c; padding: 10px 14px; font-size: 12px; line-height: 1.7; margin-bottom: 20px; }
 .review svg { color: #c89b3c; }
