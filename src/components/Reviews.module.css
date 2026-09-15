@@ -37,6 +37,13 @@
 .review figcaption a { display: inline-block; padding: 8px 0; text-decoration: underline; }
 .reviewActions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .reviewForm { margin: 34px 0 20px; border: 1px solid #c89b3c45; padding: 24px; background: #181813; }
+.success { display: flex; align-items: center; gap: 24px; padding: 20px 0; animation: sentReveal .45s ease-out both; }
+.successIcon { display: grid; place-items: center; flex: 0 0 70px; height: 70px; border: 1px solid #c89b3c; border-radius: 50%; background: #c89b3c15; color: #e1bc66; animation: sentReveal .65s ease-out both; }
+.success h3 { margin: 10px 0; font-family: var(--font-display), serif; font-size: clamp(28px, 4vw, 38px); line-height: 1.1; }
+.success p:not(.eyebrow) { color: #c8c4ba; font-size: 14px; line-height: 1.8; }
+.spinner { animation: orbit 1s linear infinite; }
+.cta:disabled { cursor: wait; opacity: .65; }
+@keyframes sentReveal { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
 .formGrid { display: grid; grid-template-columns: 1fr 1.5fr auto; gap: 12px; margin-top: 14px; }
 .formGrid input, .formGrid textarea { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid #c89b3c55; background: #f7f4ed; color: #15130f; padding: 12px; font: inherit; font-size: 13px; }
 .formGrid textarea { resize: vertical; }
@@ -61,6 +68,7 @@
   .copy { padding: 24px 24px 32px; }
   .formGrid { grid-template-columns: 1fr; }
   .reviewForm { padding: 18px; }
+  .success { flex-direction: column; align-items: flex-start; gap: 16px; }
   .formGrid { gap: 10px; }
   .formGrid .cta, .reviewActions .cta { width: 100%; max-width: none; justify-content: center; margin-top: 4px; }
   .reviewActions { display: grid; grid-template-columns: 1fr; }

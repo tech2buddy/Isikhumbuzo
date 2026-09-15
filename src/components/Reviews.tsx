@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, Pause, Play, Quote } from "lucide-react";
+import { ArrowUpRight, Check, LoaderCircle, Pause, Play, Quote } from "lucide-react";
 import styles from "./Reviews.module.css";
 
 // Publish only genuine reviews with permission to display the reviewer's name.
@@ -17,6 +17,8 @@ export default function Reviews() {
   const [shareStatus, setShareStatus] = useState("");
   const [formStatus, setFormStatus] = useState("");
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const submissionLock = useRef(false);
   const section = useRef<HTMLElement>(null);
   const displayed = reviews;
 
@@ -47,16 +49,22 @@ export default function Reviews() {
   }
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (sending) return;
+    if (submissionLock.current || sent) return;
+    const form = event.currentTarget;
+    const details = new FormData(form);
+    submissionLock.current = true;
     setSending(true);
     setFormStatus("Sending…");
     try {
-      const response = await fetch("/api/reviews", { method: "POST", body: new FormData(event.currentTarget), signal: AbortSignal.timeout(30000) });
+      const response = await fetch("/api/reviews", { method: "POST", body: details, signal: AbortSignal.timeout(30000) });
       const result = await response.json().catch(() => ({}));
       setFormStatus(response.ok ? "Thank you. Your review will appear after our team approves it." : (result.error || "We couldn’t send your review. Please try again."));
-      if (response.ok) event.currentTarget.reset();
+      if (response.ok) {
+        form.reset();
+        setSent(true);
+      }
     } catch { setFormStatus("We couldn’t connect. Please try again."); }
-    finally { setSending(false); }
+    finally { setSending(false); submissionLock.current = false; }
   }
   return (
     <section ref={section} id="reviews" aria-labelledby="reviews-title" className={styles.section} data-paused={paused}>
@@ -92,10 +100,15 @@ export default function Reviews() {
           </div>
         </div>}
 
-        <form onSubmit={submitReview} className={styles.reviewForm} encType="multipart/form-data">
+        <form onSubmit={submitReview} className={styles.reviewForm} encType="multipart/form-data" aria-busy={sending}>
+          {sent ? <div className={styles.success} role="status" aria-live="polite">
+            <span className={styles.successIcon}><Check size={34} strokeWidth={1.8} aria-hidden="true" /></span>
+            <div><p className={styles.eyebrow}>THANK YOU FOR SHARING</p><h3>Review sent successfully.</h3><p>Your words mean a lot to us. Your review will appear after our team approves it.</p><span className={styles.note}>Already sent — you don’t need to submit it again.</span></div>
+          </div> : <>
           <p className={styles.eyebrow}>SHARE YOUR EXPERIENCE</p>
-          <div className={styles.formGrid}><input name="name" required minLength={2} maxLength={80} placeholder="Your name" aria-label="Your name" /><textarea name="text" required minLength={3} maxLength={1200} rows={3} placeholder="Tell us about your experience (at least 3 characters)" aria-label="Your review" /><button type="submit" disabled={sending} className={styles.cta}>{sending ? "Sending…" : "Submit review"} <ArrowUpRight size={18} /></button></div>
+          <div className={styles.formGrid}><input disabled={sending} name="name" required minLength={2} maxLength={80} placeholder="Your name" aria-label="Your name" /><textarea disabled={sending} name="text" required minLength={3} maxLength={1200} rows={3} placeholder="Tell us about your experience (at least 3 characters)" aria-label="Your review" /><button type="submit" disabled={sending} className={styles.cta}>{sending ? "Sending…" : "Submit review"} {sending ? <LoaderCircle size={18} className={styles.spinner} aria-hidden="true" /> : <ArrowUpRight size={18} aria-hidden="true" />}</button></div>
           <p role="status" className={styles.note}>{formStatus}</p>
+          </>}
         </form>
         <div className={styles.reviewActions}>
           <a href={reviewUrl || FACEBOOK} target="_blank" rel="noreferrer" className={styles.cta}>{reviewUrl ? "Leave a Google review" : "Leave feedback on Facebook"} <ArrowUpRight size={18} /></a>
