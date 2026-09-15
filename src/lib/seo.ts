@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://isikhumbulo.co.za";
+export const SITE_URL = "https://www.isikhumbulo.co.za";
 export const SITE_NAME = "Isikhumbulo Memorial";
 
 export function pageMetadata(title: string, description: string, path: string): Metadata {
@@ -30,6 +30,7 @@ export const businessStructuredData = {
       url: `${SITE_URL}/`,
       name: SITE_NAME,
       alternateName: ["Isikhumbulo", "IsikhumbuloMemorial"],
+      inLanguage: "en-ZA",
       publisher: { "@id": `${SITE_URL}/#business` },
     },
     {
@@ -40,6 +41,7 @@ export const businessStructuredData = {
       url: `${SITE_URL}/`,
       description: "Tombstones and memorials in Crystal Park, Benoni, South Africa.",
       image: `${SITE_URL}/images/heartfelt-memorial-2.png`,
+      logo: `${SITE_URL}/logo.png`,
       telephone: "+27760990333",
       email: "isikhumbulomemorial@gmail.com",
       address: {
@@ -50,7 +52,10 @@ export const businessStructuredData = {
         postalCode: "1520",
         addressCountry: "ZA",
       },
-      sameAs: ["https://www.facebook.com/share/1DHdrPcL7u/?mibextid=wwXIfr"],
+      sameAs: [
+        "https://www.facebook.com/share/1DHdrPcL7u/?mibextid=wwXIfr",
+        "https://share.google/2WFNrU0Wueo6tCSlr",
+      ],
     },
   ],
 };

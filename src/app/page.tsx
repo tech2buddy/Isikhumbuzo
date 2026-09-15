@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import IntroTransition from "@/components/IntroTransition";
 import Reviews from "@/components/Reviews";
+import MemorialQuestions from "@/components/MemorialQuestions";
 import { businessStructuredData, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(
@@ -100,6 +101,7 @@ export default function Home() {
         <Tribute />
         <Reviews />
         <Consultation />
+        <MemorialQuestions />
       </main>
       <Footer />
     </>

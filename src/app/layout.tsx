@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Cinzel, Montserrat } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/seo";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-display",
@@ -22,13 +23,14 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://isikhumbulo.co.za"),
+  metadataBase: new URL(SITE_URL),
+  robots: { index: true, follow: true, "max-image-preview": "large" },
   title: "Isikhumbulo Memorial | Honouring Every Life, Preserving Every Memory",
   description:
     "Isikhumbulo Memorial creates timeless, handcrafted tombstones and memorials. Explore our craftsmanship, memorial gallery and book a private consultation.",
   openGraph: {
     type: "website",
-    url: "https://isikhumbulo.co.za",
+    url: SITE_URL,
     siteName: "Isikhumbulo Memorial",
     title: "Isikhumbulo Memorial | Honouring Every Life, Preserving Every Memory",
     description: "Handcrafted tombstones and memorials created with care in South Africa.",
